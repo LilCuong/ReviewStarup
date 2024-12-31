@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+ <div th:replace="~{Admin/Fragment/element :: head}"></div>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+   <div th:replace="~{Admin/Fragment/element :: header}"></div>
+  <!-- ======= Header ======= -->
+  <!-- End Header -->
+  <div th:replace="~{Admin/Fragment/element :: sidebar}"></div>
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Tổng tài khoản ADMIN</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center ">
+                      <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 th:text="${numberOfAdmin}">admin</h6>
+                      
+                    </div>
+                  
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+            
+            
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Tổng tài khoản người dùng</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-person-bounding-box"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 th:text="${numberOfUser}">admin</h6>
+                      
+                    </div>
+                  
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+            
+            
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Tổng doanh thu</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="ri-coins-line"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 th:text="${#numbers.formatDecimal(sumAmount, 1, 'COMMA', 0, 'POINT')} + 'VND'">admin</h6>
+                      
+                    </div>
+                  
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+            
+            
+            <div class="col-xxl-3 col-md-6">
+              <div class="card info-card sales-card">
+
+               
+                <div class="card-body">
+                  <h5 class="card-title">Tổng đơn hàng</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 th:text="${numberOfOrder}"></h6>
+                      
+                    </div>
+                  
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+            
+            
+           
+            
+            
+         
+
+          
+
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+ 	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+  <!-- ======= Footer ======= -->
+ <div th:replace="~{Admin/Fragment/element :: footer}">
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+ <div th:replace="~{Admin/Fragment/element :: head}"></div>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+   <div th:replace="~{Admin/Fragment/element :: header}"></div>
+  <!-- ======= Header ======= -->
+  <!-- End Header -->
+  <div th:replace="~{Admin/Fragment/element :: sidebar}"></div>
+
+  <main id="main" class="main">
+  
+  <div class="pagetitle">
+			<h1>Quản lý giá</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="admin/index">Home</a></li>
+					<li class="breadcrumb-item active">Quản lý giá</li>
+				</ol>
+			</nav>
+		</div>
+
+	<div class="row">
+		<div class="col-12">
+		<div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Giá mỗi đơn</h5>
+
+              <!-- Horizontal Form -->
+              <form method="post" action="/admin/price/save">
+                <div class="row mb-3">
+                  
+                  <div class="col-sm-12">
+                    <input type="text" class="form-control" id="inputText" name="amount" th:value="${value.amount}" required>
+                  </div>
+                </div>
+               
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+              </form><!-- End Horizontal Form -->
+
+            </div>
+          </div>
+		
+		</div>
+	</div>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+ 	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+  <!-- ======= Footer ======= -->
+ <div th:replace="~{Admin/Fragment/element :: footer}">
+
+</body>
+
+</html>

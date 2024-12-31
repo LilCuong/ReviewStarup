@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>Dashboard - NiceAdmin Bootstrap Template</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
+
+<!-- Favicons -->
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+
+<!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Mar 17 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+	<div th:replace="~{Admin/Fragment/element :: header}"></div>
+	<!-- ======= Header ======= -->
+	<!-- End Header -->
+	<div th:replace="~{Admin/Fragment/element :: sidebar}"></div>
+
+	<!-- ======= Sidebar ======= -->
+
+
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<h1>Quản lý người dùng</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
+					<li class="breadcrumb-item"><a href="/admin/user">Quản lý
+							người dùng</a></li>
+					<li class="breadcrumb-item active"><span
+						th:text="${user.username}"></span></li>
+				</ol>
+			</nav>
+		</div>
+		<!-- End Page Title -->
+
+		<section class="section dashboard">
+			<div class="row">
+
+
+				<div class="col-lg-12">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Sửa tài khoản người dùng</h5>
+
+							<!-- Horizontal Form -->
+							<form method="post" action="/admin/user-detail/save"
+								th:object="${user}">
+								<input th:field="*{id}" name="id" hidden>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Tên
+										đăng nhập</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											th:field="*{username}" required>
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="password" class="col-sm-2 col-form-label">Mật
+										khẩu</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="password"
+											name="password" th:field="*{password}" required minlength="6">
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="password" class="col-sm-2 col-form-label">Email</label>
+									<div class="col-sm-10">
+										<input type="email" class="form-control" id="password"
+											name="email" th:field="*{email}" required>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="role" class="col-sm-2 col-form-label">Chức
+										vụ</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="role" name="role"
+											th:field="*{role}" required>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for=amount class="col-sm-2 col-form-label">Số
+										dư</label>
+									<div class="col-sm-10">
+										<input type="number" class="form-control" id="amount"
+											name="amount" min="0" th:field="*{amount}"  required>
+									</div>
+								</div>
+
+<div class="row mb-3">
+									<label for=amount class="col-sm-2 col-form-label">Đã nạp</label>
+									<div class="col-sm-10">
+										<input type="number" class="form-control" id="amount"
+											name="deposited" min="0" th:field="*{deposited}"  required>
+									</div>
+								</div>
+
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary">Cập nhật</button>
+									<button type="reset" class="btn btn-secondary">Reset</button>
+								</div>
+							</form>
+							<!-- End Horizontal Form -->
+
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-4">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Thêm bill nạp tiền</h5>
+
+							<!-- Horizontal Form -->
+							<form class="row g-3" method="post" action="/admin/recharge/add">
+								<input name="userId" th:value="${user.id}" hidden>
+								<div class="col-md-12">
+									<label for="inputName5" class="form-label">Số tiền nạp</label>
+									<input type="number" class="form-control" id="inputName5"
+										name="depositAmount" min="0" required>
+								</div>
+
+								
+
+								<div class="text-center">
+									<button type="submit" class="btn btn-primary">Thêm</button>
+									<button type="reset" class="btn btn-secondary">Reset</button>
+								</div>
+							</form>
+							<!-- End Multi Columns Form -->
+
+							<!-- End Horizontal Form -->
+
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-lg-8">
+
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Danh sách bill</h5>
+
+
+							<!-- Table with stripped rows -->
+							<table class="table datatable" id="example">
+								<thead>
+									<tr>
+										<th>Mã đơn</th>
+										<th>Số tiền nạp</th>
+										<th>Trạng thái</th>
+										<th>Số tiền trước</th>
+										<th>Số tiền sau</th>
+										<th>Ngày nạp</th>
+										<th>Tùy chỉnh</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="filteredTransaction : ${filteredTransactions}">
+										<td th:text="'#' + ${filteredTransaction.id}"></td>
+										<td
+											th:text="${#numbers.formatDecimal(filteredTransaction.recharge.depositAmount , 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+										<td >
+											<span th:if="${filteredTransaction.recharge.status == 'DONE'}" class="badge bg-success">Đã nạp</span>
+											<span th:if="${filteredTransaction.recharge.status == 'WAIT'}" class="badge bg-secondary">Đang chờ</span>
+											<span th:if="${filteredTransaction.recharge.status == 'CANCEL'}" class="badge bg-danger">Hoàn thành</span>
+										<td
+											th:text="${#numbers.formatDecimal(filteredTransaction.recharge.prevBalance , 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+										<td
+											th:text="${#numbers.formatDecimal(filteredTransaction.recharge.afterBalance , 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+										<td
+											th:text="${#dates.format(filteredTransaction.recharge.depositDate , 'dd/MM/yyyy HH:mm')}"></td>
+										<td>
+											<button type="button" class="btn btn-danger"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-delete' + ${filteredTransaction.id}">
+												<i class="ri-delete-bin-4-fill"></i>
+											</button>
+											<form>
+												<div class="modal fade" th:id="'basicModal-delete' + ${filteredTransaction.id}"
+													tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title text-danger" name="name">
+																	Xác nhận xóa bill:
+																	<text th:text="'#' + ${filteredTransaction.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																<input th:value="${user.id}" name="id" hidden>
+																<p>
+																	Xóa bill 
+																	<text class="fw-bold" th:text="'#' + ${filteredTransaction.id}"></text>
+																</p>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-danger"
+																	th:href="@{/admin/recharge/delete/{id} (id=${filteredTransaction.recharge.id})}">
+																	Xác nhận xóa </a>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- End Basic Modal-->
+											</form>
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+							<!-- End Table with stripped rows -->
+
+						</div>
+					</div>
+
+				</div>
+				
+				
+				
+				<div class="col-lg-12">
+
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Lịch sử giao dịch</h5>
+
+
+							<!-- Table with stripped rows -->
+							<table class="table datatable" id="example">
+								<thead>
+									<tr>
+										<th>Mã giao dịch</th>
+										
+										<th>Nội dung</th>
+										<th>Số dư trước</th>
+										<th>Số tiền</th>
+										<th>Số dư sau</th>
+										<th>Thời gian</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="transaction : ${transactions}">
+									<td th:text="'#' + ${transaction.id}"></td>
+										
+										<td>
+											<span th:if="${transaction.recharge != null}" > Nạp tiền</span>
+										<span th:if="${transaction.order != null}" > Đơn hàng</span>
+										
+										</td>
+										<td th:text="${#numbers.formatDecimal(transaction.prevBalance , 1, 'COMMA', 0, 'POINT')} + 'VND'">
+										</td>
+										<td >
+											<span th:if="${transaction.recharge != null}" th:text="'+' + ${#numbers.formatDecimal(transaction.depositAmount , 1, 'COMMA', 0, 'POINT')} + 'VND'"></span>
+											<span th:if="${transaction.order != null}" th:text="'-' + ${#numbers.formatDecimal(transaction.depositAmount , 1, 'COMMA', 0, 'POINT')} + 'VND'"></span>
+										</td>
+										<td th:text="${#numbers.formatDecimal(transaction.afterBalance , 1, 'COMMA', 0, 'POINT')} + 'VND'">
+										</td>
+										<td
+											th:text="${#dates.format(transaction.depositDate , 'dd/MM/yyyy HH:mm')}"></td>
+										
+										</tr>
+
+								</tbody>
+							</table>
+							<!-- End Table with stripped rows -->
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+	<!-- End #main -->
+
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+
+</body>
+
+</html>

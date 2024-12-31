@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng</title>
+
+   <div th:replace="~{User/Fragment/element :: head}">
+   	</div>
+</head>
+<body class="bg-gray " style="padding-top: 60px; ">
+    <div th:replace="~{User/Fragment/element :: header}">
+   	</div>
+
+    <main class="container">
+        <div class="row">
+            <div class="col-12 mt-3 mb-4 p-0">
+                <div class="border rounded bg-white shadow-sm p-3">
+                    <h6 class="fw-bold">Lịch sử đơn</h6>
+                    <hr>
+
+                    <div style="width: 100%; overflow-x: auto;" >
+                        <table class="table " id="example" >
+                            <thead>
+                              <tr>
+                                <th scope="col">Mã giao dịch</th>
+                                <th scope="col">Link Maps</th>
+                                <th scope="col">Thao tác</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Ghi chú</th>
+                                <th scope="col">Nội dung</th>
+                                <th scope="col">Đơn giá</th>
+                                <th scope="col">Thời gian</th>
+                                <th scope="col">Ngày hoàn thành</th>
+                              </tr>
+                            </thead>
+                            <tbody >
+                              <tr th:each="transaction : ${transactions}">
+                              	<td th:text="'#' + ${transaction.id}">1</td>
+                              	<td th:text="${transaction.order.mapLink}">1</td>
+                              	<td>
+                              	<a class="btn btn-outline-secondary p-0 px-2" th:href="${info.supportLink }">Hỗ trợ</a>
+                              	</td>
+                              	<td>
+                              		<span th:if="${transaction.order.status == 'Đang chờ'}" class="badge bg-secondary">Đang chờ</span>
+                              		<span th:if="${transaction.order.status == 'Đã hủy'}" class="badge bg-danger">Đã hủy</span>
+                              		<span th:if="${transaction.order.status == 'Hoàn thành'}" class="badge bg-success">Hoàn thành</span>
+                              	
+                              	</td>
+                              	<td th:text="${transaction.order.note}">1</td>
+                              	<td th:text="${transaction.order.description}"></td>
+                              	
+                              	
+                              	<td th:text="${#numbers.formatDecimal(transaction.order.unitPrice, 1, 'COMMA', 0, 'POINT')} + 'VND'">1</td>
+                              	<td th:text="${#dates.format(transaction.order.creationDate, 'dd/MM/yyy HH:mm')}">1</td>
+                              	<td th:text="${#dates.format(transaction.order.completionDate, 'dd/MM/yyy HH:mm')}">1</td>
+                              	
+                              </tr>
+                              
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+<div th:replace="~{User/Fragment/element :: inform}">
+   	</div>
+
+   <div th:replace="~{User/Fragment/element :: footer}">
+   	</div>
+    <script src="/User/js/menu.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+	<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function(event) {
+            const preview = this.closest('.modal-content').querySelector('.preview');
+            preview.innerHTML = ''; // Clear previous images
+            const files = event.target.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.appendChild(img);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+});
+</script>
+    <script>
+    $('#example').DataTable({
+        layout: {
+            topStart: {
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+            }
+        }
+    });
+    </script>
+</body>
+</html>

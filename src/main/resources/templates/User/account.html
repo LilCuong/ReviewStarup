@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản</title>
+
+       <div th:replace="~{User/Fragment/element :: head}"></div>
+    </head>
+<body class="bg-gray " style="padding-top: 60px;">
+    
+    <div th:replace="~{User/Fragment/element :: header}"></div>
+    
+
+    <main class="container my-4 ">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 mb-3">
+                <div class=" border rounded bg-white shadow-sm p-3" >
+                    <h6 class="fw-bold">Thông tin tài khoản</h6>
+                    <hr>
+                    <form class="row g-3">
+                        <div class="col-md-6">
+                          <label for="inputEmail4" class="form-label">Tên đăng nhập</label>
+                          <input type="text" class="form-control" id="inputEmail4" disabled th:value="${user.username}">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="inputEmail4" disabled th:value="${user.email}">
+                          </div>
+                        
+                          <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Cấp bậc</label>
+                            <input type="text" class="form-control" id="inputEmail4" disabled  th:value="${user.role}">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Ngày cập nhật</label>
+                            <input type="text" class="form-control" id="inputEmail4" disabled th:value="${#dates.format(user.updateDate, 'dd/MM/yyyy HH:mm')}">
+                          </div>
+        
+                          <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Số dư</label>
+                            <input type="text" class="form-control" id="inputEmail4" disabled th:value="${#numbers.formatDecimal(user.amount , 1, 'COMMA', 0, 'POINT')} + 'VND'">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Tổng nạp</label>
+                            <input type="text" class="form-control" id="inputEmail4" disabled th:value="${#numbers.formatDecimal(user.deposited , 1, 'COMMA', 0, 'POINT')} + 'VND'">
+                          </div>
+                      </form>
+                </div>
+            </div>
+            
+
+            <div class="col-lg-6 col-md-12">
+                <div class=" border rounded bg-white shadow-sm p-3" >
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="fw-bold m-0">Thay đổi mật khẩu</h6>
+                    <a class="btn btn-outline-secondary py-0"  id="togglePassword">
+                        <i class="fa-solid fa-eye-slash" id="toggleIcon"></i>
+                    </a>
+                    </div>
+                    <hr>
+                    <form id="password-form" method="post" action="/change-pass">
+                    <input th:value="${user.id}" hidden name="userId">
+                        <div class="mb-3">
+                          <label for="password" class="form-label">Nhập mật khẩu</label>
+                          <div class="input-group mb-3">
+                            <input type="password" name="password" class="form-control" id="current-password" placeholder="Nhập mật khẩu hiện tại" required minlength="6">
+                            
+                          </div>
+                          
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Nhập mật khẩu mới</label>
+                            <div class="input-group mb-3">
+                              <input type="password" name="new-password" class="form-control" id="new-password" placeholder="Nhập mật khẩu mới" required minlength="6">
+                              
+                            </div>
+                            
+                          </div>
+
+                          <div class="mb-1 ">
+                            <label for="password" class="form-label">Nhập lại mật khẩu mới</label>
+                            <div class="input-group mb-3">
+                              <input type="password" class="form-control" id="confirm-password" placeholder="Nhập lại mật khẩu mới" required minlength="6">
+                              
+                            </div>
+                            
+                          </div>
+                          
+<div id="error-message" class="px-2 mb-3  bg-grass-red text-light rounded"> </div>
+
+                        <button type="submit" class="btn btn-primary col-12">Cập nhật <i class="fa-solid fa-repeat"></i></button>
+                      </form>
+                </div>
+    
+            </div>
+            
+            
+            <div class="col-12 mt-3">
+                <div class="border rounded bg-white shadow-sm p-3">
+                    <h6 class="fw-bold">Lịch sử giao dịch</h6>
+                    <hr>
+
+                    <div style="width: 100%; overflow-x: auto;" >
+                        <table class="table " id="example" >
+                            <thead>
+                              <tr>
+                                <th scope="col">Mã giao dịch</th>
+                                <th scope="col">Tài khoản</th>
+                                <th scope="col">Mã đơn</th>
+                                <th scope="col">Số dư trước</th>
+                                <th scope="col">Giao dịch</th>
+                                <th scope="col">Số dư sau</th>
+                                <th scope="col">Nội dung</th>
+                                <th scope="col">Thời gian</th>
+                              </tr>
+                            </thead>
+                            <tbody >
+                              <tr th:each="transaction : ${transactions}">
+                                <th th:text="'#' + ${transaction.id}">1</th>
+                                <td th:text="${transaction.user.username}">Mark</td>
+                                <td>
+                                <span th:if="${transaction.order != null}" th:text="'#' +${transaction.order.id}">Đơn hàng</span>
+                                <span th:if="${transaction.recharge != null}"  th:text="'#' +${transaction.recharge.id}">Nạp tiền</span>
+                                </td>
+                                <td th:text="${#numbers.formatDecimal(transaction.prevBalance, 1, 'COMMA', 0, 'POINT')} + 'VND'">@mdo</td>
+                                <td >
+                                	 <span th:if="${transaction.order != null}" th:text="'-' + ${#numbers.formatDecimal(transaction.depositAmount, 1, 'COMMA', 0, 'POINT')} + 'VND'"></span>
+                                <span th:if="${transaction.recharge != null}" th:text="'+' + ${#numbers.formatDecimal(transaction.depositAmount, 1, 'COMMA', 0, 'POINT')} + 'VND'"></span>
+                                </td>
+                                <td th:text="${#numbers.formatDecimal(transaction.afterBalance, 1, 'COMMA', 0, 'POINT')} + 'VND'">@mdo</td>
+                                <td th:text="${transaction.detail}">@mdo</td>
+                                <td th:text="${#dates.format(transaction.depositDate, 'hh/MM/yyyy HH:mm')}">@mdo</td>
+                              </tr>
+                             
+                              
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </main>
+
+    <div th:replace="~{User/Fragment/element :: inform}"></div>
+    <div th:replace="~{User/Fragment/element :: footer}"></div>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/User/js/menu.js"></script>
+    <script src="/User/js/changePass.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.bootstrap5.js"></script>
+    <script>
+        $('#example').DataTable();
+    </script>
+</body>
+</html>

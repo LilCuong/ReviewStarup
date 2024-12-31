@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>Dashboard - NiceAdmin Bootstrap Template</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
+
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+</head>
+
+<body>
+
+	<!-- ======= Header ======= -->
+	<div th:replace="~{Admin/Fragment/element :: header}"></div>
+	<!-- ======= Header ======= -->
+	<!-- End Header -->
+	<div th:replace="~{Admin/Fragment/element :: sidebar}"></div>
+
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<h1>Quản lý ngân hàng</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="admin/index">Home</a></li>
+					<li class="breadcrumb-item active">Quản lý thông tin</li>
+				</ol>
+			</nav>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Thông tin liên hệ</h5>
+
+						<!-- Horizontal Form -->
+
+						<form method="post" action="/admin/info/update">
+						<div class="row mb-3">
+							<div class="col-sm-12">
+<input type="text" class="form-control" id="username"
+											name="id" th:value="${information.id}" hidden>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Tên ADMIN</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="adminName" th:value="${information.adminName}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Số đt/zalo</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="callNumber" th:value="${information.callNumber}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Link facebook</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="facebookLink" th:value="${information.facebookLink}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Link liên hệ</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="supportLink" th:value="${information.supportLink}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Link hỗ trợ</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="contactLink" th:value="${information.contactLink}">
+									</div>
+								</div>
+
+								<div>
+									<button type="submit" class="btn btn-primary w-100"
+										data-bs-toggle="modal">Cập nhật</button>
+
+
+
+								</div>
+
+							</div>
+						</div>
+						</form>
+					</div>
+
+
+					<!-- End Horizontal Form -->
+
+				</div>
+			</div>
+			
+			
+			
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Tủy chỉnh email</h5>
+
+						<!-- Horizontal Form -->
+
+						<form method="post" action="/admin/info/email/update">
+						<div class="row mb-3">
+							<div class="col-sm-12">
+			<input type="text" class="form-control" id="username" hidden
+											name="id" th:value="${email.id}">
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">smtp server</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="smtpServer" th:value="${email.smtpServer}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">smtp_port</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="smtpPort" th:value="${email.smtpPort}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">email</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="username" th:value="${email.username}">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">password</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="password" th:value="${email.password}">
+									</div>
+								</div>
+
+								<div>
+									<button type="submit" class="btn btn-primary w-100"
+										data-bs-toggle="modal">Cập nhật</button>
+
+
+
+								</div>
+
+							</div>
+						</div>
+						</form>
+					</div>
+
+
+					<!-- End Horizontal Form -->
+
+				</div>
+			</div>
+
+		</div>
+		</div>
+
+
+	</main>
+	<!-- End #main -->
+
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: footer}">
+</body>
+
+</html>
