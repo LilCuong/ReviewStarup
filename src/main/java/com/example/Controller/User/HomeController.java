@@ -46,24 +46,27 @@ public class HomeController {
 	@GetMapping({"/index", "", "/"})
 	public String Home(@CookieValue(value = "user_auth_token", defaultValue = "") String authToken, Model model) {
 		Optional<Value> value = valueService.findId1();
-		model.addAttribute("amount", value.get().getAmount());
-		Optional<Information> information = informationService.findById(1);
-		model.addAttribute("info", information.get());
-		
-		String username = JwtUtil.validateToken(authToken);
-		if (username != null) {
-			User user = userService.findByUsername(username);
-			if (user != null) {
-				model.addAttribute("user", user);
-				
-			}
-		}
-		else {
+		if(value.isPresent()) {
+			model.addAttribute("amount", value.get().getAmount());
+			Optional<Information> information = informationService.findById(1);
+			model.addAttribute("info", information.get());
 			
-			return "redirect:/login";
+			String username = JwtUtil.validateToken(authToken);
+			if (username != null) {
+				User user = userService.findByUsername(username);
+				if (user != null) {
+					model.addAttribute("user", user);
+					
+				}
+			}
+			else {
+				
+				return "redirect:/login";
+			}
+			boolean isLoggedIn = username != null;
+			model.addAttribute("isLoggedIn", isLoggedIn);
 		}
-		boolean isLoggedIn = username != null;
-		model.addAttribute("isLoggedIn", isLoggedIn);
+		
 		return "User/index";
 	}
 
