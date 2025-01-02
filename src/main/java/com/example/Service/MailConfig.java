@@ -18,12 +18,12 @@ public class MailConfig {
 	
 	@Bean
 	public JavaMailSender getJavaMailSender() {
-		Email email = emailService.getEmail();
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost(email.getSmtpServer());
-		mailSender.setPort(email.getSmtpPort());
-		mailSender.setUsername(email.getUsername());
-		mailSender.setPassword(email.getPassword());
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("cuongly.dev@gmail.com");
+        mailSender.setPassword("d r p o g n o z d j s a h l f n");
 		
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.transport.protocol", "smtp");
