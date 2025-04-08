@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>Dashboard - NiceAdmin Bootstrap Template</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
+
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+</head>
+
+<body>
+
+	<!-- ======= Header ======= -->
+	<div th:replace="~{Admin/Fragment/element :: header}"></div>
+	<!-- ======= Header ======= -->
+	<!-- End Header -->
+	<div th:replace="~{Admin/Fragment/element :: sidebar}"></div>
+
+	<main id="main" class="main">
+
+		<div class="pagetitle">
+			<h1>Quản lý đơn hàng</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
+					<li class="breadcrumb-item active">Quản lý đơn hàng</li>
+				</ol>
+			</nav>
+		</div>
+		<!-- End Page Title -->
+
+		<section class="section dashboard">
+			<div class="row">
+
+
+
+				<div class="col-lg-12">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Danh sách đơn</h5>
+
+							<!-- Default Tabs -->
+							<ul class="nav nav-tabs d-flex" id="myTabjustified"
+								role="tablist">
+								<li class="nav-item flex-fill" role="presentation">
+									<button class="nav-link w-100 active" id="home-tab"
+										data-bs-toggle="tab" data-bs-target="#home-justified"
+										type="button" role="tab" aria-controls="home"
+										aria-selected="true">Đang chờ</button>
+								</li>
+								<li class="nav-item flex-fill" role="presentation">
+									<button class="nav-link w-100" id="profile-tab"
+										data-bs-toggle="tab" data-bs-target="#profile-justified"
+										type="button" role="tab" aria-controls="profile"
+										aria-selected="false">Đã hoàn thành</button>
+								</li>
+								<li class="nav-item flex-fill" role="presentation">
+									<button class="nav-link w-100" id="contact-tab"
+										data-bs-toggle="tab" data-bs-target="#contact-justified"
+										type="button" role="tab" aria-controls="contact"
+										aria-selected="false">Đã hủy</button>
+								</li>
+							</ul>
+							<div class="tab-content pt-2" id="myTabjustifiedContent">
+								<div class="tab-pane fade show active" id="home-justified"
+									role="tabpanel" aria-labelledby="home-tab">
+
+									<table class="table datatable" id="example">
+										<thead>
+											<tr>
+												<th>Mã đơn</th>
+												<th>Người đặt</th>
+												<th>Trạng thái</th>
+												<th>Map link</th>
+												<th>Mô tả</th>
+												<th>Số lượng</th>
+												<th>Ghi chú</th>
+												<th>Tổng đơn</th>
+												<th>Ngày đặt</th>
+												<th>Ngày hoàn thành</th>
+												<!-- <th>Ảnh</th> -->
+												<th>Tùy chỉnh</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="filteredTransaction : ${filteredTransactions}"
+												th:if="${filteredTransaction.order.status == 'Đang chờ'}">
+												<td th:text="'#' + ${filteredTransaction.id}"></td>
+												<td th:text="${filteredTransaction.order.user.username}"></td>
+												<td><span class="badge bg-secondary"
+													th:if="${filteredTransaction.order.status == 'Đang chờ'}"
+													th:text="${filteredTransaction.order.status}"></span> <span
+													class="badge bg-success"
+													th:if="${filteredTransaction.order.status == 'Hoàn thành'}"
+													th:text="${filteredTransaction.order.status}"></span> <span
+													class="badge bg-danger"
+													th:if="${filteredTransaction.order.status == 'Đã hủy'}"
+													th:text="${filteredTransaction.order.status}"></span></td>
+												<td th:text="${filteredTransaction.order.mapLink}"></td>
+												<td th:text="${filteredTransaction.order.description}"></td>
+												<td th:text="${filteredTransaction.order.quantity}"></td>
+												<td th:text="${filteredTransaction.order.note}"></td>
+												<td
+													th:text="${#numbers.formatDecimal(filteredTransaction.order.unitPrice, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+												<td
+													th:text="${#dates.format(filteredTransaction.order.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
+												<td
+													th:text="${#dates.format(filteredTransaction.order.completionDate, 'dd/MM/yyyy HH:mm')}"></td>
+												<!-- <td>
+											<div
+												th:if="${orderImagesMap[order.id] != null and orderImagesMap[order.id].size() > 0}"
+												style="position: relative; width: 50px; height: 50px; overflow: hidden; cursor: pointer;"
+												data-bs-toggle="modal"
+												th:data-bs-target="'#imageModal-' + ${order.id}">
+												Hiển thị ảnh đầu tiên
+												<img th:src="@{${orderImagesMap[order.id].get(0).image}}"
+													width="100%" height="auto">
+
+												Hiển thị overlay + số lượng ảnh còn lại nếu có nhiều hơn 1 ảnh
+												<div th:if="${orderImagesMap[order.id].size() > 1}"
+													style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); color: white; display: flex; align-items: center; justify-content: center;">
+													+<span th:text="${orderImagesMap[order.id].size() - 1}"></span>
+												</div>
+											</div>
+										</td>
+
+										Modal for displaying all images
+										<div th:id="'imageModal-' + ${order.id}" class="modal fade"
+											tabindex="-1" aria-labelledby="imageModalLabel"
+											aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="imageModalLabel">Ảnh đơn
+															hàng</h5>
+														<button type="button" class="btn-close"
+															data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<div th:each="image : ${orderImagesMap[order.id]}" class="position-relative mb-2 border">
+															<img th:src="@{${image.image}}" class="img-fluid rounded"
+																alt="Order Image" />
+																<a th:href="@{/admin/order/delete-image/{id} (id=${image.id})}" class="btn btn-outline-danger position-absolute bottom-0 end-0 p-0 px-2">Xóa ảnh</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div> -->
+												<td>
+													<button type="button" class="btn btn-success"
+														th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#basicModal-' + ${filteredTransaction.order.id}">
+														<i class="bi bi-bag-check-fill"></i>
+													</button>
+
+													<button type="button" class="btn btn-outline-danger"
+														th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#basicModal-cancel' + ${filteredTransaction.order.id}">
+														<i class="bi bi-bag-x-fill"></i>
+													</button> 
+													
+													
+													
+													<button type="button" class="btn btn-danger"
+												th:disabled="${filteredTransaction.order.status == 'Đang chờ'}"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-delete' + ${filteredTransaction.order.id}">
+												<i class="ri-delete-bin-4-fill"></i>
+											</button>
+<form>
+												<div class="modal fade"
+													th:id="'basicModal-delete' + ${filteredTransaction.order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title text-danger" name="name">
+																	Xóa đơn
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																Xác nhận xóa đơn <span class="fw-bold"
+																	th:text="'#' + ${filteredTransaction.id}"></span> 
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-danger"
+																	th:href="@{/admin/order/delete-by-id/{id} (id=${filteredTransaction.order.id})}">Xác
+																	nhận xóa</a>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											</form> 
+													
+													
+													<!-- <button type="button" class="btn btn-outline-primary"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-image' + ${order.id}">
+												<i class="bi bi-camera-fill"></i>
+											</button> -->
+
+
+													<form>
+														<div class="modal fade"
+															th:id="'basicModal-' + ${filteredTransaction.order.id}"
+															tabindex="-1">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title " name="name">
+																			Hoàn thành đơn:
+																			<text class="fw-bold"
+																				th:text="'#' + ${filteredTransaction.id}"></text>
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		Xác nhận hoàn thành đơn <span class="fw-bold"
+																			th:text="'#' + ${filteredTransaction.id}"></span>
+																	</div>
+																	<div class="modal-footer">
+
+
+
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-primary"
+																			th:href="@{/admin/order/done/{id} (id=${filteredTransaction.order.id})}">Hoàn
+																			thành</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- End Basic Modal-->
+													</form>
+
+
+													<form>
+														<div class="modal fade"
+															th:id="'basicModal-cancel' + ${filteredTransaction.order.id}"
+															tabindex="-1">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title text-danger" name="name">
+																			Hủy đơn:
+																			<text class="fw-bold"
+																				th:text="'#' + ${filteredTransaction.id}"></text>
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		Xác nhận hủy đơn <span class="fw-bold"
+																			th:text="'#' + ${filteredTransaction.id}"></span> và
+																		số tiền của đơn sẽ được trả về người dùng!
+																	</div>
+																	<div class="modal-footer">
+
+
+
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-danger"
+																			th:href="@{/admin/order/cancel/{id} (id=${filteredTransaction.order.id})}">Xác
+																			nhận hủy</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- End Basic Modal-->
+													</form> <!-- <form method="post" action="/admin/order/add-image"  enctype="multipart/form-data">
+												<div class="modal fade"
+													th:id="'basicModal-image' + ${order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title " name="name">
+																	Thêm ảnh đơn hàng:
+																	<text class="fw-bold" th:text="'#' + ${order.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+															<input th:value="${order.id}" name="orderId" hidden>
+																<input class="form-control" type="file" multiple name="file"
+																	id="file-input">
+																<div class="preview" id="preview"></div>
+
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<button class="btn btn-primary" type="submit"
+																	>Thêm</button>
+															</div>
+														</div>
+													</div>
+												</div>
+												End Basic Modal
+											</form> -->
+
+												</td>
+											</tr>
+
+										</tbody>
+									</table>
+
+								</div>
+								<div class="tab-pane fade" id="profile-justified"
+									role="tabpanel" aria-labelledby="profile-tab">
+
+									<table class="table datatable" id="example">
+										<thead>
+											<tr>
+												<th>Mã đơn</th>
+												<th>Người đặt</th>
+												<th>Trạng thái</th>
+												<th>Map link</th>
+												<th>Mô tả</th>
+												<th>Số lượng</th>
+												<th>Ghi chú</th>
+												<th>Tổng đơn</th>
+												<th>Ngày đặt</th>
+												<th>Ngày hoàn thành</th>
+												<!-- <th>Ảnh</th> -->
+												<th>Tùy chỉnh</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="filteredTransaction : ${filteredTransactions}"
+												th:if="${filteredTransaction.order.status == 'Hoàn thành'}">
+												<td th:text="'#' + ${filteredTransaction.id}"></td>
+												<td th:text="${filteredTransaction.order.user.username}"></td>
+												<td><span class="badge bg-secondary"
+													th:if="${filteredTransaction.order.status == 'Đang chờ'}"
+													th:text="${filteredTransaction.order.status}"></span> <span
+													class="badge bg-success"
+													th:if="${filteredTransaction.order.status == 'Hoàn thành'}"
+													th:text="${filteredTransaction.order.status}"></span> <span
+													class="badge bg-danger"
+													th:if="${filteredTransaction.order.status == 'Đã hủy'}"
+													th:text="${filteredTransaction.order.status}"></span></td>
+												<td th:text="${filteredTransaction.order.mapLink}"></td>
+												<td th:text="${filteredTransaction.order.description}"></td>
+												<td th:text="${filteredTransaction.order.quantity}"></td>
+												<td th:text="${filteredTransaction.order.note}"></td>
+												<td
+													th:text="${#numbers.formatDecimal(filteredTransaction.order.unitPrice, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+												<td
+													th:text="${#dates.format(filteredTransaction.order.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
+												<td
+													th:text="${#dates.format(filteredTransaction.order.completionDate, 'dd/MM/yyyy HH:mm')}"></td>
+												<!-- <td>
+											<div
+												th:if="${orderImagesMap[order.id] != null and orderImagesMap[order.id].size() > 0}"
+												style="position: relative; width: 50px; height: 50px; overflow: hidden; cursor: pointer;"
+												data-bs-toggle="modal"
+												th:data-bs-target="'#imageModal-' + ${order.id}">
+												Hiển thị ảnh đầu tiên
+												<img th:src="@{${orderImagesMap[order.id].get(0).image}}"
+													width="100%" height="auto">
+
+												Hiển thị overlay + số lượng ảnh còn lại nếu có nhiều hơn 1 ảnh
+												<div th:if="${orderImagesMap[order.id].size() > 1}"
+													style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); color: white; display: flex; align-items: center; justify-content: center;">
+													+<span th:text="${orderImagesMap[order.id].size() - 1}"></span>
+												</div>
+											</div>
+										</td>
+
+										Modal for displaying all images
+										<div th:id="'imageModal-' + ${order.id}" class="modal fade"
+											tabindex="-1" aria-labelledby="imageModalLabel"
+											aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="imageModalLabel">Ảnh đơn
+															hàng</h5>
+														<button type="button" class="btn-close"
+															data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<div th:each="image : ${orderImagesMap[order.id]}" class="position-relative mb-2 border">
+															<img th:src="@{${image.image}}" class="img-fluid rounded"
+																alt="Order Image" />
+																<a th:href="@{/admin/order/delete-image/{id} (id=${image.id})}" class="btn btn-outline-danger position-absolute bottom-0 end-0 p-0 px-2">Xóa ảnh</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div> -->
+												<td>
+													<button type="button" class="btn btn-success"
+														th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#basicModal-' + ${filteredTransaction.order.id}">
+														<i class="bi bi-bag-check-fill"></i>
+													</button>
+
+													<button type="button" class="btn btn-outline-danger"
+														th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#basicModal-cancel' + ${filteredTransaction.order.id}">
+														<i class="bi bi-bag-x-fill"></i>
+													</button> 
+													
+													
+													
+													<button type="button" class="btn btn-danger"
+												th:disabled="${filteredTransaction.order.status == 'Đang chờ'}"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-delete' + ${filteredTransaction.order.id}">
+												<i class="ri-delete-bin-4-fill"></i>
+											</button>
+<form>
+												<div class="modal fade"
+													th:id="'basicModal-delete' + ${filteredTransaction.order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title text-danger" name="name">
+																	Xóa đơn
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																Xác nhận xóa đơn <span class="fw-bold"
+																	th:text="'#' + ${filteredTransaction.id}"></span> 
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-danger"
+																	th:href="@{/admin/order/delete-by-id/{id} (id=${filteredTransaction.order.id})}">Xác
+																	nhận xóa</a>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											</form> 
+													
+													
+													<!-- <button type="button" class="btn btn-outline-primary"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-image' + ${order.id}">
+												<i class="bi bi-camera-fill"></i>
+											</button> -->
+
+
+													<form>
+														<div class="modal fade"
+															th:id="'basicModal-' + ${filteredTransaction.order.id}"
+															tabindex="-1">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title " name="name">
+																			Hoàn thành đơn:
+																			<text class="fw-bold"
+																				th:text="'#' + ${filteredTransaction.id}"></text>
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		Xác nhận hoàn thành đơn <span class="fw-bold"
+																			th:text="'#' + ${filteredTransaction.id}"></span>
+																	</div>
+																	<div class="modal-footer">
+
+
+
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-primary"
+																			th:href="@{/admin/order/done/{id} (id=${filteredTransaction.order.id})}">Hoàn
+																			thành</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- End Basic Modal-->
+													</form>
+
+
+													<form>
+														<div class="modal fade"
+															th:id="'basicModal-cancel' + ${filteredTransaction.order.id}"
+															tabindex="-1">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title text-danger" name="name">
+																			Hủy đơn:
+																			<text class="fw-bold"
+																				th:text="'#' + ${filteredTransaction.id}"></text>
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		Xác nhận hủy đơn <span class="fw-bold"
+																			th:text="'#' + ${filteredTransaction.id}"></span> và
+																		số tiền của đơn sẽ được trả về người dùng!
+																	</div>
+																	<div class="modal-footer">
+
+
+
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-danger"
+																			th:href="@{/admin/order/cancel/{id} (id=${filteredTransaction.order.id})}">Xác
+																			nhận hủy</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- End Basic Modal-->
+													</form> <!-- <form method="post" action="/admin/order/add-image"  enctype="multipart/form-data">
+												<div class="modal fade"
+													th:id="'basicModal-image' + ${order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title " name="name">
+																	Thêm ảnh đơn hàng:
+																	<text class="fw-bold" th:text="'#' + ${order.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+															<input th:value="${order.id}" name="orderId" hidden>
+																<input class="form-control" type="file" multiple name="file"
+																	id="file-input">
+																<div class="preview" id="preview"></div>
+
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<button class="btn btn-primary" type="submit"
+																	>Thêm</button>
+															</div>
+														</div>
+													</div>
+												</div>
+												End Basic Modal
+											</form> -->
+
+												</td>
+											</tr>
+
+										</tbody>
+									</table>
+
+
+								</div>
+								<div class="tab-pane fade" id="contact-justified"
+									role="tabpanel" aria-labelledby="contact-tab">
+
+									<table class="table datatable" id="example">
+										<thead>
+											<tr>
+												<th>Mã đơn</th>
+												<th>Người đặt</th>
+												<th>Trạng thái</th>
+												<th>Map link</th>
+												<th>Mô tả</th>
+												<th>Số lượng</th>
+												<th>Ghi chú</th>
+												<th>Tổng đơn</th>
+												<th>Ngày đặt</th>
+												<th>Ngày hoàn thành</th>
+												<!-- <th>Ảnh</th> -->
+												<th>Tùy chỉnh</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="filteredTransaction : ${filteredTransactions}"
+												th:if="${filteredTransaction.order.status == 'Đã hủy'}">
+												<td th:text="'#' + ${filteredTransaction.id}"></td>
+												<td th:text="${filteredTransaction.order.user.username}"></td>
+												<td><span class="badge bg-secondary"
+													th:if="${filteredTransaction.order.status == 'Đang chờ'}"
+													th:text="${filteredTransaction.order.status}"></span> <span
+													class="badge bg-success"
+													th:if="${filteredTransaction.order.status == 'Hoàn thành'}"
+													th:text="${filteredTransaction.order.status}"></span> <span
+													class="badge bg-danger"
+													th:if="${filteredTransaction.order.status == 'Đã hủy'}"
+													th:text="${filteredTransaction.order.status}"></span></td>
+												<td th:text="${filteredTransaction.order.mapLink}"></td>
+												<td th:text="${filteredTransaction.order.description}"></td>
+												<td th:text="${filteredTransaction.order.quantity}"></td>
+												<td th:text="${filteredTransaction.order.note}"></td>
+												<td
+													th:text="${#numbers.formatDecimal(filteredTransaction.order.unitPrice, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+												<td
+													th:text="${#dates.format(filteredTransaction.order.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
+												<td
+													th:text="${#dates.format(filteredTransaction.order.completionDate, 'dd/MM/yyyy HH:mm')}"></td>
+												<!-- <td>
+											<div
+												th:if="${orderImagesMap[order.id] != null and orderImagesMap[order.id].size() > 0}"
+												style="position: relative; width: 50px; height: 50px; overflow: hidden; cursor: pointer;"
+												data-bs-toggle="modal"
+												th:data-bs-target="'#imageModal-' + ${order.id}">
+												Hiển thị ảnh đầu tiên
+												<img th:src="@{${orderImagesMap[order.id].get(0).image}}"
+													width="100%" height="auto">
+
+												Hiển thị overlay + số lượng ảnh còn lại nếu có nhiều hơn 1 ảnh
+												<div th:if="${orderImagesMap[order.id].size() > 1}"
+													style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); color: white; display: flex; align-items: center; justify-content: center;">
+													+<span th:text="${orderImagesMap[order.id].size() - 1}"></span>
+												</div>
+											</div>
+										</td>
+
+										Modal for displaying all images
+										<div th:id="'imageModal-' + ${order.id}" class="modal fade"
+											tabindex="-1" aria-labelledby="imageModalLabel"
+											aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="imageModalLabel">Ảnh đơn
+															hàng</h5>
+														<button type="button" class="btn-close"
+															data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<div th:each="image : ${orderImagesMap[order.id]}" class="position-relative mb-2 border">
+															<img th:src="@{${image.image}}" class="img-fluid rounded"
+																alt="Order Image" />
+																<a th:href="@{/admin/order/delete-image/{id} (id=${image.id})}" class="btn btn-outline-danger position-absolute bottom-0 end-0 p-0 px-2">Xóa ảnh</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div> -->
+												<td>
+													<button type="button" class="btn btn-success"
+														th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#basicModal-' + ${filteredTransaction.order.id}">
+														<i class="bi bi-bag-check-fill"></i>
+													</button>
+
+													<button type="button" class="btn btn-outline-danger"
+														th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#basicModal-cancel' + ${filteredTransaction.order.id}">
+														<i class="bi bi-bag-x-fill"></i>
+													</button> 
+													
+													
+													
+													<button type="button" class="btn btn-danger"
+												th:disabled="${filteredTransaction.order.status == 'Đang chờ'}"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-delete' + ${filteredTransaction.order.id}">
+												<i class="ri-delete-bin-4-fill"></i>
+											</button>
+<form>
+												<div class="modal fade"
+													th:id="'basicModal-delete' + ${filteredTransaction.order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title text-danger" name="name">
+																	Xóa đơn
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																Xác nhận xóa đơn <span class="fw-bold"
+																	th:text="'#' + ${filteredTransaction.id}"></span> 
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-danger"
+																	th:href="@{/admin/order/delete-by-id/{id} (id=${filteredTransaction.order.id})}">Xác
+																	nhận xóa</a>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+											</form> 
+													
+													
+													<!-- <button type="button" class="btn btn-outline-primary"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-image' + ${order.id}">
+												<i class="bi bi-camera-fill"></i>
+											</button> -->
+
+
+													<form>
+														<div class="modal fade"
+															th:id="'basicModal-' + ${filteredTransaction.order.id}"
+															tabindex="-1">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title " name="name">
+																			Hoàn thành đơn:
+																			<text class="fw-bold"
+																				th:text="'#' + ${filteredTransaction.id}"></text>
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		Xác nhận hoàn thành đơn <span class="fw-bold"
+																			th:text="'#' + ${filteredTransaction.id}"></span>
+																	</div>
+																	<div class="modal-footer">
+
+
+
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-primary"
+																			th:href="@{/admin/order/done/{id} (id=${filteredTransaction.order.id})}">Hoàn
+																			thành</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- End Basic Modal-->
+													</form>
+
+
+													<form>
+														<div class="modal fade"
+															th:id="'basicModal-cancel' + ${filteredTransaction.order.id}"
+															tabindex="-1">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title text-danger" name="name">
+																			Hủy đơn:
+																			<text class="fw-bold"
+																				th:text="'#' + ${filteredTransaction.id}"></text>
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		Xác nhận hủy đơn <span class="fw-bold"
+																			th:text="'#' + ${filteredTransaction.id}"></span> và
+																		số tiền của đơn sẽ được trả về người dùng!
+																	</div>
+																	<div class="modal-footer">
+
+
+
+																		<button type="button" class="btn btn-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-danger"
+																			th:href="@{/admin/order/cancel/{id} (id=${filteredTransaction.order.id})}">Xác
+																			nhận hủy</a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- End Basic Modal-->
+													</form> <!-- <form method="post" action="/admin/order/add-image"  enctype="multipart/form-data">
+												<div class="modal fade"
+													th:id="'basicModal-image' + ${order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title " name="name">
+																	Thêm ảnh đơn hàng:
+																	<text class="fw-bold" th:text="'#' + ${order.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+															<input th:value="${order.id}" name="orderId" hidden>
+																<input class="form-control" type="file" multiple name="file"
+																	id="file-input">
+																<div class="preview" id="preview"></div>
+
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<button class="btn btn-primary" type="submit"
+																	>Thêm</button>
+															</div>
+														</div>
+													</div>
+												</div>
+												End Basic Modal
+											</form> -->
+
+												</td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!-- End Default Tabs -->
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-12">
+
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Tất cả đơn</h5>
+
+
+							<!-- Table with stripped rows -->
+							<table class="table datatable" id="example">
+								<thead>
+									<tr>
+										<th>Mã đơn</th>
+										<th>Người đặt</th>
+										<th>Trạng thái</th>
+										<th>Map link</th>
+										<th>Mô tả</th>
+										<th>Số lượng</th>
+										<th>Ghi chú</th>
+										<th>Tổng đơn</th>
+										<th>Ngày đặt</th>
+										<th>Ngày hoàn thành</th>
+										<!-- <th>Ảnh</th> -->
+										<th>Tùy chỉnh</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="filteredTransaction : ${filteredTransactions}">
+										<td th:text="'#' + ${filteredTransaction.id}"></td>
+										<td th:text="${filteredTransaction.order.user.username}"></td>
+										<td><span class="badge bg-secondary"
+											th:if="${filteredTransaction.order.status == 'Đang chờ'}"
+											th:text="${filteredTransaction.order.status}"></span> <span
+											class="badge bg-success"
+											th:if="${filteredTransaction.order.status == 'Hoàn thành'}"
+											th:text="${filteredTransaction.order.status}"></span> <span
+											class="badge bg-danger"
+											th:if="${filteredTransaction.order.status == 'Đã hủy'}"
+											th:text="${filteredTransaction.order.status}"></span></td>
+										<td th:text="${filteredTransaction.order.mapLink}"></td>
+										<td th:text="${filteredTransaction.order.description}"></td>
+										<td th:text="${filteredTransaction.order.quantity}"></td>
+										<td th:text="${filteredTransaction.order.note}"></td>
+										<td
+											th:text="${#numbers.formatDecimal(filteredTransaction.order.unitPrice, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+										<td
+											th:text="${#dates.format(filteredTransaction.order.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
+										<td
+											th:text="${#dates.format(filteredTransaction.order.completionDate, 'dd/MM/yyyy HH:mm')}"></td>
+										<!-- <td>
+											<div
+												th:if="${orderImagesMap[order.id] != null and orderImagesMap[order.id].size() > 0}"
+												style="position: relative; width: 50px; height: 50px; overflow: hidden; cursor: pointer;"
+												data-bs-toggle="modal"
+												th:data-bs-target="'#imageModal-f' + ${order.id}">
+												Hiển thị ảnh đầu tiên
+												<img th:src="@{${orderImagesMap[order.id].get(0).image}}"
+													width="100%" height="auto">
+
+												Hiển thị overlay + số lượng ảnh còn lại nếu có nhiều hơn 1 ảnh
+												<div th:if="${orderImagesMap[order.id].size() > 1}"
+													style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); color: white; display: flex; align-items: center; justify-content: center;">
+													+<span th:text="${orderImagesMap[order.id].size() - 1}"></span>
+												</div>
+											</div>
+										</td>
+
+										Modal for displaying all images
+										<div th:id="'imageModal-f' + ${order.id}" class="modal fade"
+											tabindex="-1" aria-labelledby="imageModalLabel"
+											aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="imageModalLabel">Ảnh đơn
+															hàng</h5>
+														<button type="button" class="btn-close"
+															data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<div th:each="image : ${orderImagesMap[order.id]}" class="position-relative mb-2 border">
+															<img th:src="@{${image.image}}" class="img-fluid rounded"
+																alt="Order Image" />
+																<a th:href="@{/admin/order/delete-image/{id} (id=${image.id})}" class="btn btn-outline-danger position-absolute bottom-0 end-0 p-0 px-2">Xóa ảnh</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div> -->
+										<td>
+											<button type="button" class="btn btn-success"
+												th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-' + ${filteredTransaction.order.id}">
+												<i class="bi bi-bag-check-fill"></i>
+											</button>
+
+											<button type="button" class="btn btn-outline-danger"
+												th:disabled="${filteredTransaction.order.status != 'Đang chờ'}"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-cancel' + ${filteredTransaction.order.id}">
+												<i class="bi bi-bag-x-fill"></i>
+											</button>
+
+											<button type="button" class="btn btn-danger"
+												th:disabled="${filteredTransaction.order.status == 'Đang chờ'}"
+												data-bs-toggle="modal"
+												th:attr="data-bs-target='#basicModal-delete-f' + ${filteredTransaction.order.id}">
+												<i class="ri-delete-bin-4-fill"></i>
+											</button>
+											<form>
+												<div class="modal fade"
+													th:id="'basicModal-delete-f' + ${filteredTransaction.order.id}"
+													tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title text-danger" name="name">
+																	Xóa đơn</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																Xác nhận xóa đơn <span class="fw-bold"
+																	th:text="'#' + ${filteredTransaction.id}"></span>
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-danger"
+																	th:href="@{/admin/order/delete-by-id/{id} (id=${filteredTransaction.order.id})}">Xác
+																	nhận xóa</a>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</form>
+
+
+
+
+											<form>
+												<div class="modal fade"
+													th:id="'basicModal-' + ${filteredTransaction.order.id}"
+													tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title " name="name">
+																	Hoàn thành đơn:
+																	<text class="fw-bold"
+																		th:text="'#' + ${filteredTransaction.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																Xác nhận hoàn thành đơn <span class="fw-bold"
+																	th:text="'#' + ${filteredTransaction.id}"></span>
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-primary"
+																	th:href="@{/admin/order/done/{id} (id=${filteredTransaction.order.id})}">Hoàn
+																	thành</a>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- End Basic Modal-->
+											</form>
+
+
+											<form>
+												<div class="modal fade"
+													th:id="'basicModal-cancel' + ${filteredTransaction.order.id}"
+													tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title text-danger" name="name">
+																	Hủy đơn:
+																	<text class="fw-bold"
+																		th:text="'#' + ${filteredTransaction.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																Xác nhận hủy đơn <span class="fw-bold"
+																	th:text="'#' + ${filteredTransaction.id}"></span> và số
+																tiền của đơn sẽ được trả về người dùng!
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<a class="btn btn-danger"
+																	th:href="@{/admin/order/cancel/{id} (id=${filteredTransaction.order.id})}">Xác
+																	nhận hủy</a>
+															</div>
+														</div>
+													</div>
+												</div>
+												<!-- End Basic Modal-->
+											</form> <!-- <form method="post" action="/admin/order/add-image"  enctype="multipart/form-data">
+												<div class="modal fade"
+													th:id="'basicModal-image-f' + ${order.id}" tabindex="-1">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title " name="name">
+																	Thêm ảnh đơn hàng:
+																	<text class="fw-bold" th:text="'#' + ${order.id}"></text>
+																</h5>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+															<input th:value="${order.id}" name="orderId" hidden>
+																<input class="form-control" type="file" multiple name="file"
+																	id="file-input">
+																<div class="preview" id="preview"></div>
+
+															</div>
+															<div class="modal-footer">
+
+
+
+																<button type="button" class="btn btn-secondary"
+																	data-bs-dismiss="modal">Close</button>
+																<button class="btn btn-primary" type="submit"
+																	>Thêm</button>
+															</div>
+														</div>
+													</div>
+												</div>
+												End Basic Modal
+											</form>
+ -->
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+							<!-- End Table with stripped rows -->
+							<button type="button" class="btn btn-outline-danger"
+								data-bs-toggle="modal" data-bs-target="#basicModal-delete-all">
+								Xóa tất cả</button>
+							<form>
+								<div class="modal fade" id="basicModal-delete-all" tabindex="-1">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title text-danger" name="name">Xóa tất
+													cả</h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<p>Xác nhận xóa tất cả đơn hàng đã qua xử lý</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Close</button>
+												<a class="btn btn-danger" href="/admin/order/delete-all">
+													Xác nhận xóa</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- End Basic Modal-->
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+	</main>
+	<!-- End #main -->
+
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: footer}">
+</body>
+<style>
+.preview img {
+	max-width: 200px;
+	margin: 10px;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function(event) {
+            const preview = this.closest('.modal-content').querySelector('.preview');
+            preview.innerHTML = ''; // Clear previous images
+            const files = event.target.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.appendChild(img);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+});
+</script>
+</html>

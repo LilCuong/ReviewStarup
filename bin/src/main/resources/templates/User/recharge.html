@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nạp tiền</title>
+    	<div th:replace="~{User/Fragment/element :: head}">
+   	</div>
+   </head>
+<body class="bg-gray " style="padding-top: 60px;">
+    <div th:replace="~{User/Fragment/element :: header}"></div>
+
+    <main class="container my-4">
+        <div class="row p-2">
+            <div class="col-12 ">
+                <div class="bg-white border shadow-sm rounded p-3 row text-center" th:if="${bank != null}">
+                    <div class="col-lg-6 col-md-12 " >
+                        <img width="200px" th:src="${bank.QR}" class=""> 
+                    </div>
+                    <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-between p-0">
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                <b>Ngân hàng:</b>
+                                <span class="text-danger fw-bold" th:text="${bank.bankName}"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <b>Số tài khoản:</b>
+                                <div class="d-flex align-items-center">
+                                    <span class="fs-5 " id="text-to-copy" th:text="${bank.accountNumber}">0968533675</span>
+                                    <button class="btn btn-outline-primary py-0 ms-1" style="font-size: 10px;" id="copy-button">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <b>Chủ tài khoản:</b>
+                                <span class="fw-bold fs-5" th:text="${bank.accountName}">Ngô Văn Nam</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <b>Nội dung chuyển:</b>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-danger fs-5"  id="text-to-copy2" th:text="${bank.transferContent}">Danhgiamaps 685</span>
+                                    <button class="btn btn-outline-primary py-0 ms-1" style="font-size: 10px;" id="copy-button2">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <b class="fs-6 text-warning"><i class="fa-solid fa-circle-exclamation"></i> Lưu ý: </b>
+                            <span class="fs-6">Hãy chuyển khoản đúng nội dung để hệ thống tự cộng tiền sau 1-2 phút. Nếu gặp vấn đề vui lòng liên hệ admin.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 mt-3 p-0">
+            	<div class="border rounded bg-white shadow-sm p-3">
+            	<p class="fw-bold">Thêm yêu cầu nạp tiền</p>
+            	<hr>
+            	<form method="post" action="/recharge/add">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Mã giao dịch ngân hàng</label>
+    <input name="transactionCode" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+    <div id="emailHelp" class="form-text">Vui lòng điền vào mã giao dịch chuyển tiền ngân hàng!</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Số tiền nạp</label>
+    <input name="depositAmount" type="number" class="form-control" id="exampleInputPassword1" required min="0">
+  </div>
+ 
+  <button type="submit" class="btn btn-primary">Gửi</button>
+</form>
+            		
+            	</div>
+            </div>
+
+
+            <div class="col-12 mt-3 mb-4 p-0">
+                <div class="border rounded bg-white shadow-sm p-3">
+                    <h6 class="fw-bold">Lịch sử nạp tiền</h6>
+                    <hr>
+
+                    <div style="width: 100%; overflow-x: auto;" >
+                        <table class="table " id="example" >
+                            <thead>
+                              <tr>
+                                <th scope="col">Mã giao dịch</th> 	
+                                <th scope="col" class="text-start">Mã giao dịch ngân hàng</th> 	
+                                <th scope="col">Số dư trước</th>
+                                <th scope="col">Số tiền nạp</th>
+                                <th scope="col">Số dư sau</th>
+                                <th scope="col">Thời gian</th>
+                                <th scope="col">Trạng thái</th>
+                              </tr>
+                            </thead>
+                            <tbody >
+                              	<tr th:each="transaction : ${transactions}">
+                              		<th th:text="'#' + ${transaction.id}"></th>
+                              		<td class="text-start">
+                              		<span th:text="${transaction.recharge.transactionCode}"></span>
+                              		</td>
+                              		<td th:text="${#numbers.formatDecimal(transaction.recharge.prevBalance, 1,'COMMA', 0, 'POINT') } + 'VND'"></td>
+                              		
+                              		<td th:text="${#numbers.formatDecimal(transaction.recharge.depositAmount, 1,'COMMA', 0, 'POINT') } + 'VND'"></td>
+                              		<td th:text="${#numbers.formatDecimal(transaction.recharge.afterBalance, 1,'COMMA', 0, 'POINT') } + 'VND'"></td>
+                              		<td th:text="${#dates.format(transaction.recharge.depositDate, 'dd/MM/yyyy HH:mm')}"></td>
+                              		<td >
+                              		<span th:if="${transaction.recharge.status == 'DONE'}" class="badge bg-success">Đã nạp</span>
+                              		<span th:if="${transaction.recharge.status == 'WAIT'}" class="badge bg-secondary">Đang chờ</span>
+                              		<span th:if="${transaction.recharge.status == 'CANCEL'}" class="badge bg-danger">Đã từ chối</span>
+                              		</td>
+                              	</tr>
+                              
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+      
+  <div th:replace="~{User/Fragment/element :: inform}"></div>
+
+   <div th:replace="~{User/Fragment/element :: footer}"></div>
+   
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.bootstrap5.js"></script>
+
+    <script>
+        document.getElementById('copy-button').addEventListener('click', function() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            this.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => this.innerHTML = '<i class="fa-solid fa-copy"></i>', 2000);
+        });
+
+        document.getElementById('copy-button2').addEventListener('click', function() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy2').innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            this.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => this.innerHTML = '<i class="fa-solid fa-copy"></i>', 2000);
+        });
+
+        $('#example').DataTable();
+    </script>
+
+    <script src="/User/js/menu.js"></script>
+    
+</body>
+</html>

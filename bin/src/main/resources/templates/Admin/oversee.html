@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Pages / Login - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  
+ <div th:replace="~{Admin/Fragment/element :: head}">
+  </div>
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Mar 17 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <main>
+    <div class="container">
+
+      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+              
+              <div class="card mb-3">
+
+                <div class="card-body">
+
+                 
+
+                  <form class="row g-3 needs-validation pt-3" novalidate method="post" action="/oversee/login">
+
+                    <div class="col-12">
+                      <div class="input-group has-validation">
+                        <input type="text" name="username" class="form-control" id="yourUsername" required placeholder="username">
+                        <div class="invalid-feedback">Please enter your username.</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <input type="password" name="password" class="form-control" id="yourPassword" required placeholder="password">
+                      <div class="invalid-feedback">Please enter your password!</div>
+                    </div>
+ <div class="col-12" hidden="">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="rememberMe" value="true" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                      </div>
+                    </div>
+                   
+                    <div class="col-12">
+                      <button class="btn btn-outline-primary w-100" type="submit">Login</button>
+                    </div>
+                   
+                  </form>
+
+                </div>
+              </div>
+
+             
+
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+ 	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+</body>
+
+</html>

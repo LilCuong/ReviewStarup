@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>Oversee</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
+
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+
+<!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Mar 17 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.bootstrap5.css">
+</head>
+
+<body>
+
+	<main>
+		<div class="container">
+
+			<div class="row">
+				<div class="col-12  mt-3">
+					<div class="card pt-3">
+						<div class="card-body">
+
+
+							<!-- Horizontal Form -->
+
+							<form method="post" action="/admin/info/update">
+								<div class="row mb-3">
+									<div class="col-sm-12">
+
+										<div class="row mb-3">
+											<label for="username" class="col-sm-2 col-form-label">Revenue</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="username"
+													name="adminName" disabled th:value="${#numbers.formatDecimal(statistic.revenue, 1, 'COMMA', 0, 'POINT')} + 'VND'">
+											</div>
+										</div>
+
+<div class="row mb-3">
+											<label for="username" class="col-sm-2 col-form-label">Total Revenue</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="username"
+													name="adminName" disabled th:value="${#numbers.formatDecimal(totalRevenue, 1, 'COMMA', 0, 'POINT')} + 'VND'">
+											</div>
+										</div>
+
+
+										<div>
+											<a href="/oversee/renew" class="btn btn-primary w-100"
+												>renew</a>
+
+
+
+										</div>
+
+									</div>
+								</div>
+							</form>
+						</div>
+
+
+						<!-- End Horizontal Form -->
+
+					</div>
+				</div>
+
+
+				<div class="col-lg-12">
+
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">revenue history</h5>
+
+
+							<!-- Table with stripped rows -->
+							<table class="table " id="example">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>revenue</th>
+										<th>date</th>
+										<th>custom</th>
+									</tr>
+								</thead>
+								<tbody >
+
+									<tr th:each="statisticHistory : ${statisticHistories}">
+										<th th:text="'#' + ${statisticHistory.id}"></th>
+										<td th:text="${#numbers.formatDecimal(statisticHistory.revenue, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+										<td th:text="${#dates.format(statisticHistory.date , 'dd/MM/yyyy HH:mm')}"></td>
+										<td>
+											<a class="btn btn-outline-danger" th:href="@{/oversee/statistic/delete/{id} (id=${statisticHistory.id})}">delete</a>
+										</td>
+
+									</tr>
+								</tbody>
+							</table>
+							<!-- End Table with stripped rows -->
+
+						</div>
+					</div>
+
+				</div>
+
+
+			</div>
+
+		</div>
+	</main>
+	<!-- End #main -->
+   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+
+    <script>
+    $('#example').DataTable({
+        layout: {
+            topStart: {
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+            }
+        }
+    });
+    </script>
+  
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+</body>
+
+</html>

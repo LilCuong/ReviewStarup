@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>Dashboard - NiceAdmin Bootstrap Template</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
+
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+</head>
+
+<body>
+
+	<!-- ======= Header ======= -->
+	<div th:replace="~{Admin/Fragment/element :: header}"></div>
+	<!-- ======= Header ======= -->
+	<!-- End Header -->
+	<div th:replace="~{Admin/Fragment/element :: sidebar}"></div>
+
+	<main id="main" class="main">
+		<div class="pagetitle">
+			<h1>Quản lý ngân hàng</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="admin/index">Home</a></li>
+					<li class="breadcrumb-item active">Quản lý ngân hàng</li>
+				</ol>
+			</nav>
+		</div>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Thông tin ngân hàng</h5>
+
+						<!-- Horizontal Form -->
+
+						<div class="row mb-3">
+
+							<div
+								class="col-sm-4 d-flex justify-content-center aligh-items-center">
+								<div>
+									<img th:src="${bank.QR}" width="300px" height="auto">
+								</div>
+							</div>
+							<div class="col-sm-8">
+
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Tên
+										ngân hàng</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="bankName" th:value="${bank.bankName}"
+											disabled="disabled">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Chủ
+										tài khoản</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="accountName" th:value="${bank.accountName}"
+											disabled="disabled">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Số
+										tài khoản</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="accountNumber" th:value="${bank.accountNumber}"
+											disabled="disabled">
+									</div>
+								</div>
+								<div class="row mb-3">
+									<label for="username" class="col-sm-2 col-form-label">Nội
+										dung chuyển</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="username"
+											name="transferContent" th:value="${bank.transferContent}"
+											disabled="disabled">
+									</div>
+								</div>
+
+								<div>
+									<button type="button" class="btn btn-primary w-100"
+										data-bs-toggle="modal"
+										th:attr="data-bs-target='#basicModal-' + ${bank.id}">
+										Cập nhật</button>
+
+
+
+									<form method="post" action="/admin/bank/update"
+										>
+										<div class="modal fade" th:id="'basicModal-' + ${bank.id}"
+											tabindex="-1">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title ">Chỉnh sửa thông tin ngân
+															hàng</h5>
+														<button type="button" class="btn-close"
+															data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														<div class="col-12">
+															<input type="text" class="form-control" id="inputNanme4"
+																th:value="${bank.id}" name="id" hidden> <label
+																for="inputNanme4" class="form-label">Tên ngân
+																hàng</label> <input type="text" class="form-control"
+																id="inputNanme4" th:value="${bank.bankName}"
+																name="bankName">
+														</div>
+														<div class="col-12">
+															<label for="inputNanme4" class="form-label">Chủ
+																tài khoản</label> <input type="text" class="form-control"
+																id="inputNanme4" th:value="${bank.accountName}"
+																name="accountName">
+														</div>
+														<div class="col-12">
+															<label for="inputNanme4" class="form-label">Số
+																tài khoản</label> <input type="text" class="form-control"
+																id="inputNanme4" th:value="${bank.accountNumber}"
+																name="accountNumber">
+														</div>
+														<div class="col-12">
+															<label for="inputNanme4" class="form-label">Nội
+																dung chuyển</label> <input type="text" class="form-control"
+																id="inputNanme4" th:value="${bank.transferContent}"
+																name="transferContent">
+														</div>
+														<div class="col-12">
+															<label for="inputNanme4" class="form-label">QR</label> <input
+																type="text" class="form-control" id="inputNanme4"
+																name="QR">
+														</div>
+													</div>
+													<div class="modal-footer">
+
+
+
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Lưu</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- End Basic Modal-->
+									</form>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+					<!-- End Horizontal Form -->
+
+				</div>
+			</div>
+
+		</div>
+		</div>
+
+	</main>
+	<!-- End #main -->
+
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+	<!-- ======= Footer ======= -->
+	<div th:replace="~{Admin/Fragment/element :: footer}">
+</body>
+
+</html>
